@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animais para Adoção</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Animais para Adoção</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Voltar</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h2>Cadastrar Animal</h2>
+        <form id="form-animal">
+            <input type="text" id="nome" placeholder="Nome do Animal" required>
+            <input type="number" id="idade" placeholder="Idade" required>
+            <input type="text" id="raca" placeholder="Raça" required>
+            <input type="text" id="porte" placeholder="Porte" required>
+            <textarea id="caracteristicas" placeholder="Características Físicas" required></textarea>
+            <textarea id="historico" placeholder="Histórico de Saúde" required></textarea>
+            <input type="text" id="fotos" placeholder="URL da Foto" required>
+            <textarea id="comportamento" placeholder="Comportamento" required></textarea>
+            <textarea id="requisitos" placeholder="Requisitos para Adoção" required></textarea>
+            <button type="submit">Cadastrar Animal</button>
+        </form>
+
+        <h2>Lista de Animais</h2>
+        <div id="lista-animais"></div>
+    </main>
+    <script src="scripts.js"></script>
+</body>
+</html>
