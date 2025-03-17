@@ -45,14 +45,14 @@ Este é um sistema simples para gerenciar adoções de animais, denúncias de ma
     pip install fastapi uvicorn sqlalchemy pydantic
     ```
 
-3. **Execute o backend:**
+3. **Execute a API (backend):**
 
     ```sh
     python -m backend.main
     uvicorn backend.main:app --reload
     ```
 
-    O backend estará disponível em:
+    A API estará disponível em:
     - API: [http://localhost:8000](http://localhost:8000)
     - Documentação interativa (Swagger): [http://localhost:8000/docs](http://localhost:8000/docs)
 
@@ -60,11 +60,11 @@ Este é um sistema simples para gerenciar adoções de animais, denúncias de ma
 
     ```sh
     cd ../frontend
-    python -m http.server 8080
+    npm run dev
     ```
 
     O frontend estará disponível em:
-    - Página principal: [http://localhost:8080](http://localhost:8080)
+    - Página principal: [http://localhost:3000](http://localhost:3000)
 
 ---
 
