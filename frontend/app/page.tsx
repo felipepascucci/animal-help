@@ -81,14 +81,6 @@ function MobileMenu() {
             <Link href="/sobre" className="text-sm font-medium hover:text-primary">
               Sobre
             </Link>
-            <div className="flex flex-col gap-2 pt-2 border-t">
-              <Link href="/login" className="text-sm font-medium hover:underline">
-                Entrar
-              </Link>
-              <Button asChild className="w-full">
-                <Link href="/cadastro">Cadastrar</Link>
-              </Button>
-            </div>
           </nav>
         </div>
       )}
