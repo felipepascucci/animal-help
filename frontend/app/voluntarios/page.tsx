@@ -9,52 +9,56 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
+import { SiteHeader } from "@/components/site-header"
 
 export default function VoluntariosPage() {
   return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-4">Voluntários e Veterinários</h1>
-      <p className="text-muted-foreground mb-8">
-        Junte-se à nossa rede de pessoas comprometidas com o bem-estar animal. Cadastre-se como voluntário ou
-        veterinário parceiro.
-      </p>
+    <>
+      <SiteHeader />
+      <div className="container mx-auto px-4 py-12">
+        <h1 className="text-3xl font-bold mb-4">Voluntários e Veterinários</h1>
+        <p className="text-muted-foreground mb-8">
+          Junte-se à nossa rede de pessoas comprometidas com o bem-estar animal. Cadastre-se como voluntário ou
+          veterinário parceiro.
+        </p>
 
-      <Tabs defaultValue="voluntario" className="max-w-3xl mx-auto">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="voluntario">Voluntário</TabsTrigger>
-          <TabsTrigger value="veterinario">Veterinário</TabsTrigger>
-        </TabsList>
+        <Tabs defaultValue="voluntario" className="max-w-3xl mx-auto">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="voluntario">Voluntário</TabsTrigger>
+            <TabsTrigger value="veterinario">Veterinário</TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="voluntario">
-          <Card>
-            <CardHeader>
-              <CardTitle>Cadastro de Voluntário</CardTitle>
-              <CardDescription>
-                Preencha o formulário abaixo para se cadastrar como voluntário. Sua ajuda é fundamental para o bem-estar
-                dos animais.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <VoluntarioForm />
-            </CardContent>
-          </Card>
-        </TabsContent>
+          <TabsContent value="voluntario">
+            <Card>
+              <CardHeader>
+                <CardTitle>Cadastro de Voluntário</CardTitle>
+                <CardDescription>
+                  Preencha o formulário abaixo para se cadastrar como voluntário. Sua ajuda é fundamental para o
+                  bem-estar dos animais.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <VoluntarioForm />
+              </CardContent>
+            </Card>
+          </TabsContent>
 
-        <TabsContent value="veterinario">
-          <Card>
-            <CardHeader>
-              <CardTitle>Cadastro de Veterinário</CardTitle>
-              <CardDescription>
-                Cadastre-se como veterinário parceiro para ajudar animais em situação de vulnerabilidade.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <VeterinarioForm />
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
+          <TabsContent value="veterinario">
+            <Card>
+              <CardHeader>
+                <CardTitle>Cadastro de Veterinário</CardTitle>
+                <CardDescription>
+                  Cadastre-se como veterinário parceiro para ajudar animais em situação de vulnerabilidade.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <VeterinarioForm />
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </>
   )
 }
 

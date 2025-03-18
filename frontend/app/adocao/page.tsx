@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { ImageUpload } from "@/components/ui/image-upload"
+import { SiteHeader } from "@/components/site-header"
 
 export default function AdocaoPage() {
   const [animais, setAnimais] = useState([])
@@ -46,82 +47,85 @@ export default function AdocaoPage() {
   })
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-8">Adoção de Animais</h1>
+    <>
+      <SiteHeader />
+      <div className="container mx-auto px-4 py-12">
+        <h1 className="text-3xl font-bold mb-8">Adoção de Animais</h1>
 
-      <Tabs defaultValue="listar" className="mb-10">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="listar">Encontrar um Pet</TabsTrigger>
-          <TabsTrigger value="cadastrar">Cadastrar para Adoção</TabsTrigger>
-        </TabsList>
+        <Tabs defaultValue="listar" className="mb-10">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="listar">Encontrar um Pet</TabsTrigger>
+            <TabsTrigger value="cadastrar">Cadastrar para Adoção</TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="listar">
-          <div className="grid gap-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="grid gap-2 flex-1">
-                <Label htmlFor="porte">Porte</Label>
-                <Select value={filtro.porte} onValueChange={(value) => setFiltro({ ...filtro, porte: value })}>
-                  <SelectTrigger id="porte">
-                    <SelectValue placeholder="Selecione o porte" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="todos">Todos</SelectItem>
-                    <SelectItem value="pequeno">Pequeno</SelectItem>
-                    <SelectItem value="medio">Médio</SelectItem>
-                    <SelectItem value="grande">Grande</SelectItem>
-                  </SelectContent>
-                </Select>
+          <TabsContent value="listar">
+            <div className="grid gap-6">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="grid gap-2 flex-1">
+                  <Label htmlFor="porte">Porte</Label>
+                  <Select value={filtro.porte} onValueChange={(value) => setFiltro({ ...filtro, porte: value })}>
+                    <SelectTrigger id="porte">
+                      <SelectValue placeholder="Selecione o porte" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="todos">Todos</SelectItem>
+                      <SelectItem value="pequeno">Pequeno</SelectItem>
+                      <SelectItem value="medio">Médio</SelectItem>
+                      <SelectItem value="grande">Grande</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
+
+              {isLoading ? (
+                <div className="text-center py-12">Carregando animais...</div>
+              ) : animaisFiltrados.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {animaisFiltrados.map((animal) => (
+                    <Card key={animal.id}>
+                      <CardHeader className="p-0">
+                        <div className="relative h-48 w-full">
+                          <Image
+                            src={animal.fotos || "/placeholder.svg?height=200&width=300"}
+                            alt={animal.nome}
+                            fill
+                            className="object-cover rounded-t-lg"
+                          />
+                        </div>
+                      </CardHeader>
+                      <CardContent className="p-6">
+                        <CardTitle className="mb-2">{animal.nome}</CardTitle>
+                        <CardDescription>
+                          <strong>Idade:</strong> {animal.idade} {animal.idade === 1 ? "ano" : "anos"}
+                          <br />
+                          <strong>Raça:</strong> {animal.raca}
+                          <br />
+                          <strong>Porte:</strong> {animal.porte}
+                        </CardDescription>
+                        <p className="mt-4 line-clamp-3">{animal.comportamento}</p>
+                      </CardContent>
+                      <CardFooter>
+                        <Button asChild className="w-full">
+                          <Link href={`/adocao/${animal.id}`}>Ver detalhes</Link>
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <p className="text-muted-foreground">Nenhum animal encontrado com os filtros selecionados.</p>
+                </div>
+              )}
             </div>
+          </TabsContent>
 
-            {isLoading ? (
-              <div className="text-center py-12">Carregando animais...</div>
-            ) : animaisFiltrados.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {animaisFiltrados.map((animal) => (
-                  <Card key={animal.id}>
-                    <CardHeader className="p-0">
-                      <div className="relative h-48 w-full">
-                        <Image
-                          src={animal.fotos || "/placeholder.svg?height=200&width=300"}
-                          alt={animal.nome}
-                          fill
-                          className="object-cover rounded-t-lg"
-                        />
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-6">
-                      <CardTitle className="mb-2">{animal.nome}</CardTitle>
-                      <CardDescription>
-                        <strong>Idade:</strong> {animal.idade} {animal.idade === 1 ? "ano" : "anos"}
-                        <br />
-                        <strong>Raça:</strong> {animal.raca}
-                        <br />
-                        <strong>Porte:</strong> {animal.porte}
-                      </CardDescription>
-                      <p className="mt-4 line-clamp-3">{animal.comportamento}</p>
-                    </CardContent>
-                    <CardFooter>
-                      <Button asChild className="w-full">
-                        <Link href={`/adocao/${animal.id}`}>Ver detalhes</Link>
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">Nenhum animal encontrado com os filtros selecionados.</p>
-              </div>
-            )}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="cadastrar">
-          <CadastroAnimalForm />
-        </TabsContent>
-      </Tabs>
-    </div>
+          <TabsContent value="cadastrar">
+            <CadastroAnimalForm />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </>
   )
 }
 
@@ -164,6 +168,8 @@ function CadastroAnimalForm() {
 
     try {
       setIsSubmitting(true)
+
+      // Usa a nova função que suporta upload de imagens
       await animaisAPI.cadastrarAnimalComImagem(dadosParaEnviar, fotoFile)
 
       toast({
@@ -236,8 +242,8 @@ function CadastroAnimalForm() {
         </div>
 
         <div className="grid gap-2 md:col-span-2">
-        <Label>Foto do Animal</Label>
-        <ImageUpload onImageChange={handleImageChange} />
+          <Label>Foto do Animal</Label>
+          <ImageUpload onImageChange={handleImageChange} />
         </div>
 
         <div className="grid gap-2 md:col-span-2">

@@ -9,29 +9,33 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/hooks/use-toast"
 import { ImageUpload } from "@/components/ui/image-upload"
+import { SiteHeader } from "@/components/site-header"
 
 export default function DenunciasPage() {
   return (
-    <div className="container mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold mb-4">Denúncia de Maus-tratos</h1>
-      <p className="text-muted-foreground mb-8">
-        Use este formulário para denunciar casos de abandono ou maus-tratos a animais. Suas informações são
-        confidenciais e ajudarão a salvar vidas.
-      </p>
+    <>
+      <SiteHeader />
+      <div className="container mx-auto px-4 py-12">
+        <h1 className="text-3xl font-bold mb-4">Denúncia de Maus-tratos</h1>
+        <p className="text-muted-foreground mb-8">
+          Use este formulário para denunciar casos de abandono ou maus-tratos a animais. Suas informações são
+          confidenciais e ajudarão a salvar vidas.
+        </p>
 
-      <Card className="max-w-3xl mx-auto">
-        <CardHeader>
-          <CardTitle>Formulário de Denúncia</CardTitle>
-          <CardDescription>
-            Preencha os campos abaixo com o máximo de detalhes possível para que possamos tomar as providências
-            necessárias.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <DenunciaForm />
-        </CardContent>
-      </Card>
-    </div>
+        <Card className="max-w-3xl mx-auto">
+          <CardHeader>
+            <CardTitle>Formulário de Denúncia</CardTitle>
+            <CardDescription>
+              Preencha os campos abaixo com o máximo de detalhes possível para que possamos tomar as providências
+              necessárias.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <DenunciaForm />
+          </CardContent>
+        </Card>
+      </div>
+    </>
   )
 }
 
