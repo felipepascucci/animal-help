@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
+import { ImageUpload } from "@/components/ui/image-upload"
 
 export default function AdocaoPage() {
   const [animais, setAnimais] = useState([])
@@ -132,10 +133,10 @@ function CadastroAnimalForm() {
     porte: "",
     caracteristicas_fisicas: "",
     historico_saude: "",
-    fotos: "",
     comportamento: "",
     requisitos_adoção: "",
   })
+  const [fotoFile, setFotoFile] = useState<File | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
 
@@ -146,6 +147,10 @@ function CadastroAnimalForm() {
 
   const handleSelectChange = (name, value) => {
     setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleImageChange = (file: File | null) => {
+    setFotoFile(file)
   }
 
   const handleSubmit = async (e) => {
@@ -159,7 +164,7 @@ function CadastroAnimalForm() {
 
     try {
       setIsSubmitting(true)
-      await animaisAPI.cadastrarAnimal(dadosParaEnviar)
+      await animaisAPI.cadastrarAnimalComImagem(dadosParaEnviar, fotoFile)
 
       toast({
         title: "Animal cadastrado com sucesso!",
@@ -174,10 +179,10 @@ function CadastroAnimalForm() {
         porte: "",
         caracteristicas_fisicas: "",
         historico_saude: "",
-        fotos: "",
         comportamento: "",
         requisitos_adoção: "",
       })
+      setFotoFile(null)
     } catch (error) {
       toast({
         title: "Erro ao cadastrar animal",
@@ -231,14 +236,8 @@ function CadastroAnimalForm() {
         </div>
 
         <div className="grid gap-2 md:col-span-2">
-          <Label htmlFor="fotos">URL da Foto</Label>
-          <Input
-            id="fotos"
-            name="fotos"
-            value={formData.fotos}
-            onChange={handleChange}
-            placeholder="https://exemplo.com/foto.jpg"
-          />
+        <Label>Foto do Animal</Label>
+        <ImageUpload onImageChange={handleImageChange} />
         </div>
 
         <div className="grid gap-2 md:col-span-2">

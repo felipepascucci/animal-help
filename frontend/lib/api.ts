@@ -202,6 +202,46 @@ async function fetchAPI(endpoint: string, options: RequestInit = {}) {
   }
 }
 
+// Adicione esta função para fazer upload de arquivos
+async function uploadFile(file: File): Promise<string> {
+  // Em um ambiente real, você enviaria o arquivo para seu backend
+  // e receberia a URL do arquivo armazenado
+
+  // Para desenvolvimento, vamos simular o upload retornando uma URL de dados
+  return new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      // Retorna a URL de dados da imagem (em produção, seria a URL do servidor)
+      resolve(reader.result as string)
+    }
+    reader.readAsDataURL(file)
+  })
+}
+
+// Adicione esta função para enviar formulários com arquivos
+async function submitFormWithFiles(endpoint: string, formData: any, files: Record<string, File | null>) {
+  // Primeiro, faz upload de todos os arquivos e obtém as URLs
+  const fileUrls: Record<string, string> = {}
+
+  for (const [key, file] of Object.entries(files)) {
+    if (file) {
+      fileUrls[key] = await uploadFile(file)
+    }
+  }
+
+  // Combina os dados do formulário com as URLs dos arquivos
+  const dataToSend = {
+    ...formData,
+    ...fileUrls,
+  }
+
+  // Envia os dados para a API
+  return fetchAPI(endpoint, {
+    method: "POST",
+    body: JSON.stringify(dataToSend),
+  })
+}
+
 // API de Animais para Adoção
 export const animaisAPI = {
   // Listar todos os animais disponíveis para adoção
@@ -229,6 +269,14 @@ export const animaisAPI = {
     fetchAPI(`/animais/${id}`, {
       method: "DELETE",
     }),
+
+  // Cadastrar um novo animal para adoção com imagem
+  cadastrarAnimalComImagem: (dados: any, fotoFile: File | null) =>
+    submitFormWithFiles("/animais", dados, { fotos: fotoFile }),
+
+  // Atualizar informações de um animal com imagem
+  atualizarAnimalComImagem: (id: number, dados: any, fotoFile: File | null) =>
+    submitFormWithFiles(`/animais/${id}`, dados, { fotos: fotoFile }),
 }
 
 // API de Denúncias
@@ -252,6 +300,10 @@ export const denunciasAPI = {
       method: "PUT",
       body: JSON.stringify(dados),
     }),
+
+  // Cadastrar uma nova denúncia com imagem
+  cadastrarDenunciaComImagem: (dados: any, fotoFile: File | null) =>
+    submitFormWithFiles("/denuncias", dados, { fotos: fotoFile }),
 }
 
 // API de Voluntários

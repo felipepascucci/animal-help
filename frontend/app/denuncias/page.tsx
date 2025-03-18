@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/hooks/use-toast"
+import { ImageUpload } from "@/components/ui/image-upload"
 
 export default function DenunciasPage() {
   return (
@@ -38,9 +39,9 @@ function DenunciaForm() {
   const [formData, setFormData] = useState({
     localizacao: "",
     descricao: "",
-    fotos: "",
     anonimo: true,
   })
+  const [fotoFile, setFotoFile] = useState<File | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
 
@@ -53,12 +54,18 @@ function DenunciaForm() {
     setFormData((prev) => ({ ...prev, anonimo: checked }))
   }
 
+  const handleImageChange = (file: File | null) => {
+    setFotoFile(file)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     try {
       setIsSubmitting(true)
-      await denunciasAPI.cadastrarDenuncia(formData)
+
+      // Usa a nova função que suporta upload de imagens
+      await denunciasAPI.cadastrarDenunciaComImagem(formData, fotoFile)
 
       toast({
         title: "Denúncia enviada com sucesso!",
@@ -69,9 +76,9 @@ function DenunciaForm() {
       setFormData({
         localizacao: "",
         descricao: "",
-        fotos: "",
         anonimo: true,
       })
+      setFotoFile(null)
     } catch (error) {
       toast({
         title: "Erro ao enviar denúncia",
@@ -95,8 +102,6 @@ function DenunciaForm() {
             value={formData.localizacao}
             onChange={handleChange}
             required
-            onChange={handleChange}
-            required
             placeholder="Endereço completo ou referências do local"
           />
         </div>
@@ -115,14 +120,8 @@ function DenunciaForm() {
         </div>
 
         <div className="grid gap-2">
-          <Label htmlFor="fotos">URL de Fotos (opcional)</Label>
-          <Input
-            id="fotos"
-            name="fotos"
-            value={formData.fotos}
-            onChange={handleChange}
-            placeholder="Links para fotos que comprovem a situação"
-          />
+          <Label>Foto da Situação (opcional)</Label>
+          <ImageUpload onImageChange={handleImageChange} />
         </div>
 
         <div className="flex items-center space-x-2">
