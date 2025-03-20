@@ -152,7 +152,7 @@ function DenunciaForm({ onSuccess }) {
         </div>
 
         <div className="grid gap-2">
-          <Label>Foto da Situação (opcional)</Label>
+          <Label>Foto da Situação</Label>
           <ImageUpload onImageChange={handleImageChange} />
         </div>
 

@@ -15,7 +15,6 @@ Este projeto tem como objetivo facilitar a adoção e o resgate de animais, cone
 
 - Python 3.7 ou superior.
 - Pip para gerenciar pacotes.
-- Frameworks e bibliotecas descritas no arquivo `requirements.txt`.
 
 ### 📌 Instalação e Execução
 
@@ -49,8 +48,8 @@ Este projeto tem como objetivo facilitar a adoção e o resgate de animais, cone
 4. **Instale as dependências do frontend e inicie a aplicação (frontend):**
 
    ```sh
-   cd ../frontend
-   npm install
+   cd frontend
+   npm install --force
    
    npm run dev
    ```
