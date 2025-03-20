@@ -25,7 +25,7 @@ Este projeto tem como objetivo facilitar a adoção e o resgate de animais, cone
    git clone https://github.com/felipepascucci/animal-help.git
    ```
 
-2. **Instale as dependências:**
+2. **Instale as dependências do backend:**
 
    ```sh
    pip install fastapi uvicorn sqlalchemy pydantic
@@ -46,10 +46,12 @@ Este projeto tem como objetivo facilitar a adoção e o resgate de animais, cone
    - API: [http\://localhost:8000](http\://localhost:8000)
    - Documentação interativa (Swagger): [http\://localhost:8000/docs](http\://localhost:8000/docs)
 
-4. **Inicie a aplicação (frontend):**
+4. **Instale as dependências do frontend e inicie a aplicação (frontend):**
 
    ```sh
    cd ../frontend
+   npm install
+   
    npm run dev
    ```
 

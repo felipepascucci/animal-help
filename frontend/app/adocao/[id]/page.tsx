@@ -9,6 +9,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast"
 import { ArrowLeft } from "lucide-react"
 import { SiteHeader } from "@/components/site-header"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog"
 
 export default function DetalhesAnimalPage() {
   const params = useParams()
@@ -16,6 +24,7 @@ export default function DetalhesAnimalPage() {
   const { toast } = useToast()
   const [animal, setAnimal] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [showAdocaoDialog, setShowAdocaoDialog] = useState(false)
 
   useEffect(() => {
     async function carregarAnimal() {
@@ -118,10 +127,43 @@ export default function DetalhesAnimalPage() {
                 <p>{animal.requisitos_adoção}</p>
               </div>
 
-              <Button className="w-full mt-6">Quero Adotar</Button>
+              <Button className="w-full mt-6" onClick={() => setShowAdocaoDialog(true)}>
+                Quero Adotar
+              </Button>
             </CardContent>
           </Card>
         </div>
+
+        <Dialog open={showAdocaoDialog} onOpenChange={setShowAdocaoDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Interesse em adoção</DialogTitle>
+              <DialogDescription>Obrigado por se interessar em adotar {animal.nome}!</DialogDescription>
+            </DialogHeader>
+            <div className="py-4">
+              <p className="mb-4">
+                Para dar continuidade ao processo de adoção, entre em contato conosco através dos seguintes canais:
+              </p>
+              <div className="space-y-2 text-sm">
+                <p>
+                  <strong>Email:</strong> contato@patasdobem.com
+                </p>
+                <p>
+                  <strong>Telefone:</strong> (11) 97290-2646
+                </p>
+                <p>
+                  <strong>WhatsApp:</strong> (11) 97290-2646
+                </p>
+              </div>
+              <p className="mt-4 text-muted-foreground">
+                Informe o nome e ID do animal ({animal.nome} - #{animal.id}) para agilizar o processo.
+              </p>
+            </div>
+            <DialogFooter>
+              <Button onClick={() => setShowAdocaoDialog(false)}>Entendi</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </>
   )

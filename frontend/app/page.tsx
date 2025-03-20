@@ -375,7 +375,7 @@ function Footer() {
                 <span className="text-muted-foreground">Email: contato@patasdobem.com</span>
               </li>
               <li>
-                <span className="text-muted-foreground">Telefone: (00) 0000-0000</span>
+                <span className="text-muted-foreground">Telefone: (11) 97290-2646</span>
               </li>
             </ul>
           </div>
