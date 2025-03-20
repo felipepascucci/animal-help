@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { denunciasAPI } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -10,36 +11,74 @@ import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/hooks/use-toast"
 import { ImageUpload } from "@/components/ui/image-upload"
 import { SiteHeader } from "@/components/site-header"
+import { CheckCircle2 } from "lucide-react"
 
 export default function DenunciasPage() {
+  const [showThankYou, setShowThankYou] = useState(false)
+  const router = useRouter()
+
   return (
     <>
       <SiteHeader />
       <div className="container mx-auto px-4 py-12">
-        <h1 className="text-3xl font-bold mb-4">Denúncia de Maus-tratos</h1>
-        <p className="text-muted-foreground mb-8">
-          Use este formulário para denunciar casos de abandono ou maus-tratos a animais. Suas informações são
-          confidenciais e ajudarão a salvar vidas.
-        </p>
+        {showThankYou ? (
+          <ThankYouMessage />
+        ) : (
+          <>
+            <h1 className="text-3xl font-bold mb-4">Denúncia de Maus-tratos</h1>
+            <p className="text-muted-foreground mb-8">
+              Use este formulário para denunciar casos de abandono ou maus-tratos a animais. Suas informações são
+              confidenciais e ajudarão a salvar vidas.
+            </p>
 
-        <Card className="max-w-3xl mx-auto">
-          <CardHeader>
-            <CardTitle>Formulário de Denúncia</CardTitle>
-            <CardDescription>
-              Preencha os campos abaixo com o máximo de detalhes possível para que possamos tomar as providências
-              necessárias.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <DenunciaForm />
-          </CardContent>
-        </Card>
+            <Card className="max-w-3xl mx-auto">
+              <CardHeader>
+                <CardTitle>Formulário de Denúncia</CardTitle>
+                <CardDescription>
+                  Preencha os campos abaixo com o máximo de detalhes possível para que possamos tomar as providências
+                  necessárias.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <DenunciaForm onSuccess={() => setShowThankYou(true)} />
+              </CardContent>
+            </Card>
+          </>
+        )}
       </div>
     </>
   )
 }
 
-function DenunciaForm() {
+function ThankYouMessage() {
+  const router = useRouter()
+
+  useEffect(() => {
+    // Redirecionar para a página inicial após 5 segundos
+    const redirectTimer = setTimeout(() => {
+      router.push("/")
+    }, 5000)
+
+    // Limpar o temporizador se o componente for desmontado
+    return () => clearTimeout(redirectTimer)
+  }, [router])
+
+  return (
+    <div className="text-center py-12 max-w-2xl mx-auto">
+      <div className="flex justify-center mb-6">
+        <CheckCircle2 className="h-20 w-20 text-green-500" />
+      </div>
+      <h2 className="text-3xl font-bold mb-4">Denúncia Enviada!</h2>
+      <p className="text-xl mb-6">Agradecemos sua colaboração. Sua denúncia será analisada o mais breve possível.</p>
+      <p className="text-muted-foreground mb-8">Você será redirecionado para a página inicial em alguns segundos...</p>
+      <Button onClick={() => router.push("/")} variant="outline">
+        Voltar para a página inicial agora
+      </Button>
+    </div>
+  )
+}
+
+function DenunciaForm({ onSuccess }) {
   const [formData, setFormData] = useState({
     localizacao: "",
     descricao: "",
@@ -71,18 +110,8 @@ function DenunciaForm() {
       // Usa a nova função que suporta upload de imagens
       await denunciasAPI.cadastrarDenunciaComImagem(formData, fotoFile)
 
-      toast({
-        title: "Denúncia enviada com sucesso!",
-        description: "Agradecemos sua colaboração. Sua denúncia será analisada o mais breve possível.",
-      })
-
-      // Limpar formulário
-      setFormData({
-        localizacao: "",
-        descricao: "",
-        anonimo: true,
-      })
-      setFotoFile(null)
+      // Chama a função de sucesso para mostrar a mensagem de agradecimento
+      onSuccess()
     } catch (error) {
       toast({
         title: "Erro ao enviar denúncia",
@@ -90,7 +119,6 @@ function DenunciaForm() {
         variant: "destructive",
       })
       console.error(error)
-    } finally {
       setIsSubmitting(false)
     }
   }

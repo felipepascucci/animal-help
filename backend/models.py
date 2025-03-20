@@ -11,7 +11,7 @@ class Animal(Base):
     porte = Column(String)
     caracteristicas_fisicas = Column(Text)
     historico_saude = Column(Text)
-    fotos = Column(String, nullable=True)  # URL da foto
+    fotos = Column(String, nullable=True)
     comportamento = Column(Text)
     requisitos_adoção = Column(Text)
 
@@ -21,7 +21,7 @@ class Denuncia(Base):
     id = Column(Integer, primary_key=True, index=True)
     localizacao = Column(String)
     descricao = Column(Text)
-    fotos = Column(String, nullable=True)  # URL da foto
+    fotos = Column(String, nullable=True)
     anonimo = Column(Boolean, default=True)
 
 class Voluntario(Base):
