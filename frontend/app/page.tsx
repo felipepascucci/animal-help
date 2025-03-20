@@ -3,8 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
-import { Menu, X } from "lucide-react"
+import { ArrowRight, Heart, AlertTriangle, Users, BookOpen, PawPrint, Menu, X } from "lucide-react"
 import { useState } from "react"
 
 export default function Home() {
@@ -13,7 +12,9 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <HeroSection />
+        <StatisticsSection />
         <FeaturesSection />
+        <TestimonialsSection />
         <CtaSection />
       </main>
       <Footer />
@@ -90,22 +91,72 @@ function MobileMenu() {
 
 function HeroSection() {
   return (
-    <section className="py-20 md:py-32">
-      <div className="container mx-auto px-4 text-center">
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">Ajude a transformar vidas de animais</h1>
-        <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-10">
-          Nossa plataforma conecta animais que precisam de um lar, voluntários dispostos a ajudar e profissionais
-          veterinários comprometidos com o bem-estar animal.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" className="gap-2" asChild>
-            <Link href="/adocao">
-              Adotar um animal <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
-          <Button size="lg" variant="outline" asChild>
-            <Link href="/denuncias">Fazer uma denúncia</Link>
-          </Button>
+    <section className="py-20 md:py-32 relative overflow-hidden">
+      {/* Background image with overlay */}
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/placeholder.svg?height=1080&width=1920"
+          alt="Pets background"
+          fill
+          className="object-cover opacity-15"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/90 to-background/70"></div>
+      </div>
+
+      <div className="container mx-auto px-4 text-center relative z-10">
+        <div className="grid md:grid-cols-2 gap-8 items-center">
+          <div className="text-left">
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">Ajude a transformar vidas de animais</h1>
+            <p className="text-xl text-muted-foreground mb-10">
+              Nossa plataforma conecta animais que precisam de um lar, voluntários dispostos a ajudar e profissionais
+              veterinários comprometidos com o bem-estar animal.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button size="lg" className="gap-2" asChild>
+                <Link href="/adocao">
+                  Adotar um animal <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <Link href="/denuncias">Fazer uma denúncia</Link>
+              </Button>
+            </div>
+          </div>
+          <div className="hidden md:block relative h-[500px] rounded-lg overflow-hidden shadow-xl">
+            <Image
+              src="/pag_inicial.jpg?height=600&width=600"
+              alt="Cachorro feliz"
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function StatisticsSection() {
+  const stats = [
+    { value: "250+", label: "Animais adotados", icon: <Heart className="h-8 w-8 text-primary" /> },
+    { value: "120+", label: "Denúncias atendidas", icon: <AlertTriangle className="h-8 w-8 text-primary" /> },
+    { value: "50+", label: "Voluntários ativos", icon: <Users className="h-8 w-8 text-primary" /> },
+    { value: "30+", label: "Dicas publicadas", icon: <BookOpen className="h-8 w-8 text-primary" /> },
+  ]
+
+  return (
+    <section className="py-12 bg-primary/5">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {stats.map((stat, index) => (
+            <div key={index} className="flex flex-col items-center text-center">
+              {stat.icon}
+              <h3 className="text-3xl font-bold mt-4">{stat.value}</h3>
+              <p className="text-muted-foreground">{stat.label}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -119,23 +170,31 @@ function FeaturesSection() {
       description:
         "Cadastre animais para adoção ou encontre seu novo companheiro entre os diversos perfis disponíveis.",
       link: "/adocao",
+      icon: <Heart className="h-10 w-10 text-primary mb-4" />,
+      image: "/adocao.png?height=300&width=400",
     },
     {
       title: "Denúncias de Maus-tratos",
       description: "Denuncie casos de abandono ou maus-tratos de forma rápida e segura, ajudando a salvar vidas.",
       link: "/denuncias",
+      icon: <AlertTriangle className="h-10 w-10 text-primary mb-4" />,
+      image: "/denuncia.png?height=300&width=400",
     },
     {
       title: "Rede de Voluntários",
       description:
         "Junte-se à nossa rede de voluntários e veterinários para ajudar animais em situação de vulnerabilidade.",
       link: "/voluntarios",
+      icon: <Users className="h-10 w-10 text-primary mb-4" />,
+      image: "/voluntario.png?height=300&width=400",
     },
     {
       title: "Dicas e Cuidados",
       description:
         "Acesse conteúdo educativo sobre cuidados, alimentação e bem-estar animal para cuidar melhor do seu pet.",
       link: "/dicas",
+      icon: <BookOpen className="h-10 w-10 text-primary mb-4" />,
+      image: "/dicas.png?height=300&width=400",
     },
   ]
 
@@ -152,12 +211,84 @@ function FeaturesSection() {
 
         <div className="grid md:grid-cols-2 gap-8">
           {features.map((feature, index) => (
-            <div key={index} className="bg-background p-6 rounded-lg border">
-              <h3 className="font-bold text-xl mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground mb-4">{feature.description}</p>
-              <Button variant="outline" asChild>
-                <Link href={feature.link}>Saiba mais</Link>
-              </Button>
+            <div key={index} className="bg-background p-6 rounded-lg border hover:shadow-md transition-shadow">
+              <div className="flex flex-col md:flex-row gap-6">
+                <div className="relative w-full md:w-1/3 h-40 rounded-md overflow-hidden">
+                  <Image src={feature.image || "/placeholder.svg"} alt={feature.title} fill className="object-cover" />
+                </div>
+                <div className="md:w-2/3">
+                  <div className="flex flex-col items-start">
+                    {feature.icon}
+                    <h3 className="font-bold text-xl mb-2">{feature.title}</h3>
+                    <p className="text-muted-foreground mb-4">{feature.description}</p>
+                    <Button variant="outline" asChild className="mt-auto">
+                      <Link href={feature.link}>Saiba mais</Link>
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function TestimonialsSection() {
+  const testimonials = [
+    {
+      quote:
+        "Adotei meu cachorro através do Patas do Bem e foi a melhor decisão que já tomei. O processo foi simples e transparente.",
+      author: "Maria Silva",
+      role: "Adotante",
+      avatar: "/pessoa1.png?height=100&width=100",
+    },
+    {
+      quote:
+        "Como veterinário parceiro, posso dizer que o trabalho do Patas do Bem é essencial para o bem-estar dos animais da nossa cidade.",
+      author: "Dr. Carlos Mendes",
+      role: "Veterinário",
+      avatar: "/pessoa2.png?height=100&width=100",
+    },
+    {
+      quote: "Ser voluntária me trouxe uma nova perspectiva de vida. Ajudar os animais é uma experiência incrível.",
+      author: "Ana Santos",
+      role: "Voluntária",
+      avatar: "/pessoa3.png?height=100&width=100",
+    },
+  ]
+
+  return (
+    <section className="py-20 bg-background">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">O que dizem sobre nós</h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Conheça as histórias de quem já faz parte da nossa comunidade.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <div key={index} className="bg-muted/30 p-6 rounded-lg border">
+              <div className="flex flex-col h-full">
+                <p className="italic mb-6">"{testimonial.quote}"</p>
+                <div className="mt-auto flex items-center">
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden mr-4">
+                    <Image
+                      src={testimonial.avatar || "/placeholder.svg"}
+                      alt={testimonial.author}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div>
+                    <p className="font-semibold">{testimonial.author}</p>
+                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -168,8 +299,18 @@ function FeaturesSection() {
 
 function CtaSection() {
   return (
-    <section className="py-20 md:py-32">
-      <div className="container mx-auto px-4 text-center">
+    <section className="py-20 md:py-32 relative overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/placeholder.svg?height=800&width=1600"
+          alt="Pets background"
+          fill
+          className="object-cover opacity-20"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/90 to-background/70"></div>
+      </div>
+
+      <div className="container mx-auto px-4 text-center relative z-10">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">Faça a diferença hoje</h2>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
           Cada ação conta. Seja adotando, denunciando maus-tratos ou se voluntariando, você pode ajudar a transformar a
@@ -177,7 +318,10 @@ function CtaSection() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" asChild>
-            <Link href="/voluntarios">Seja um voluntário!</Link>
+            <Link href="/voluntarios">Seja um voluntario agora!</Link>
+          </Button>
+          <Button size="lg" variant="outline" asChild>
+            <Link href="/adocao">Ver animais disponíveis</Link>
           </Button>
         </div>
       </div>
@@ -191,7 +335,10 @@ function Footer() {
       <div className="container mx-auto px-4 py-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="font-bold text-lg mb-4">Patas do Bem</h3>
+            <div className="flex items-center gap-2 mb-4">
+              <PawPrint className="h-6 w-6 text-primary" />
+              <h3 className="font-bold text-lg">Patas do Bem</h3>
+            </div>
             <p className="text-muted-foreground">Promovendo o bem-estar animal e a adoção responsável.</p>
           </div>
 
@@ -297,14 +444,6 @@ function Footer() {
           <p className="text-sm text-muted-foreground mb-4 md:mb-0">
             &copy; {new Date().getFullYear()} Patas do Bem. Todos os direitos reservados.
           </p>
-          <div className="flex gap-4">
-            <Link href="/termos" className="text-sm text-muted-foreground hover:text-foreground">
-              Termos
-            </Link>
-            <Link href="/privacidade" className="text-sm text-muted-foreground hover:text-foreground">
-              Privacidade
-            </Link>
-          </div>
         </div>
       </div>
     </footer>

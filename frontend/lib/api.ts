@@ -103,7 +103,7 @@ const mockData = {
       resumo:
         "Aprenda a importância da higiene bucal e como escovar os dentes do seu animal de estimação corretamente.",
       conteudo: "A higiene bucal é fundamental para a saúde do seu pet...",
-      imagem_url: "/placeholder.svg?height=300&width=400",
+      imagem_url: "/escovar_os_dentes.png?height=300&width=400",
     },
     {
       id: 2,
@@ -111,7 +111,7 @@ const mockData = {
       categoria: "alimentacao",
       resumo: "Descubra quais alimentos são mais indicados para cães na terceira idade e como adaptar a dieta.",
       conteudo: "À medida que os cães envelhecem, suas necessidades nutricionais mudam...",
-      imagem_url: "/placeholder.svg?height=300&width=400",
+      imagem_url: "/caes_alimentacao.png?height=300&width=400",
     },
     {
       id: 3,
@@ -120,7 +120,7 @@ const mockData = {
       resumo:
         "Conheça os principais sinais que podem indicar problemas de saúde em gatos e quando procurar um veterinário.",
       conteudo: "Os gatos são mestres em esconder doenças e desconfortos...",
-      imagem_url: "/placeholder.svg?height=300&width=400",
+      imagem_url: "/gato_doente.png?height=300&width=400",
     },
   ],
 }
