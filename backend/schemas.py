@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from typing import Optional
+
 
 class AnimalBase(BaseModel):
     nome: str
@@ -7,7 +9,7 @@ class AnimalBase(BaseModel):
     porte: str
     caracteristicas_fisicas: str
     historico_saude: str
-    fotos: str
+    fotos: Optional[str]
     comportamento: str
     requisitos_adoção: str
 
@@ -23,7 +25,7 @@ class Animal(AnimalBase):
 class DenunciaBase(BaseModel):
     localizacao: str
     descricao: str
-    fotos: str
+    fotos: Optional[str]
     anonimo: bool = True
 
 class DenunciaCreate(DenunciaBase):

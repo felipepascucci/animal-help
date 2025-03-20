@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { animaisAPI } from "@/lib/api"
@@ -13,38 +13,66 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { ImageUpload } from "@/components/ui/image-upload"
 import { SiteHeader } from "@/components/site-header"
+import { CheckCircle2 } from "lucide-react"
 
 export default function AdocaoPage() {
   const [animais, setAnimais] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [filtro, setFiltro] = useState({ tipo: "todos", porte: "todos" })
+  const [activeTab, setActiveTab] = useState("listar")
+  const [showThankYou, setShowThankYou] = useState(false)
   const { toast } = useToast()
 
-  useEffect(() => {
-    async function carregarAnimais() {
-      try {
-        setIsLoading(true)
-        const data = await animaisAPI.listarAnimais()
-        setAnimais(data)
-      } catch (error) {
-        toast({
-          title: "Erro ao carregar animais",
-          description: "Não foi possível carregar a lista de animais para adoção.",
-          variant: "destructive",
-        })
-        console.error(error)
-      } finally {
-        setIsLoading(false)
-      }
+  // Função para carregar animais que pode ser chamada quando necessário
+  const carregarAnimais = useCallback(async () => {
+    try {
+      setIsLoading(true)
+      const data = await animaisAPI.listarAnimais()
+      setAnimais(data)
+    } catch (error) {
+      toast({
+        title: "Erro ao carregar animais",
+        description: "Não foi possível carregar a lista de animais para adoção.",
+        variant: "destructive",
+      })
+      console.error(error)
+    } finally {
+      setIsLoading(false)
     }
-
-    carregarAnimais()
   }, [toast])
+
+  // Carregar animais na montagem do componente
+  useEffect(() => {
+    carregarAnimais()
+  }, [carregarAnimais])
 
   const animaisFiltrados = animais.filter((animal) => {
     if (filtro.porte !== "todos" && animal.porte !== filtro.porte) return false
     return true
   })
+
+  // Função para lidar com o redirecionamento após o cadastro
+  const handleCadastroSuccess = () => {
+    setShowThankYou(true)
+  }
+
+  // Função para lidar com o redirecionamento após a mensagem de agradecimento
+  const handleThankYouComplete = async () => {
+    setShowThankYou(false)
+    setActiveTab("listar")
+    // Recarregar a lista de animais para mostrar o animal recém-cadastrado
+    await carregarAnimais()
+  }
+
+  // Se a mensagem de agradecimento estiver ativa, mostrar apenas ela
+  if (showThankYou) {
+    return (
+      <>
+        <SiteHeader />
+        <ThankYouMessage onComplete={handleThankYouComplete} />
+      </>
+    )
+  }
 
   return (
     <>
@@ -52,7 +80,7 @@ export default function AdocaoPage() {
       <div className="container mx-auto px-4 py-12">
         <h1 className="text-3xl font-bold mb-8">Adoção de Animais</h1>
 
-        <Tabs defaultValue="listar" className="mb-10">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-10">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="listar">Encontrar um Pet</TabsTrigger>
             <TabsTrigger value="cadastrar">Cadastrar para Adoção</TabsTrigger>
@@ -121,7 +149,7 @@ export default function AdocaoPage() {
           </TabsContent>
 
           <TabsContent value="cadastrar">
-            <CadastroAnimalForm />
+            <CadastroAnimalForm onSuccess={handleCadastroSuccess} />
           </TabsContent>
         </Tabs>
       </div>
@@ -129,7 +157,40 @@ export default function AdocaoPage() {
   )
 }
 
-function CadastroAnimalForm() {
+function ThankYouMessage({ onComplete }) {
+  useEffect(() => {
+    // Redirecionar para a aba "Encontrar um Pet" após 5 segundos
+    const redirectTimer = setTimeout(() => {
+      onComplete()
+    }, 5000)
+
+    // Limpar o temporizador se o componente for desmontado
+    return () => clearTimeout(redirectTimer)
+  }, [onComplete])
+
+  return (
+    <div className="container mx-auto px-4 py-12">
+      <div className="text-center py-12 max-w-2xl mx-auto">
+        <div className="flex justify-center mb-6">
+          <CheckCircle2 className="h-20 w-20 text-green-500" />
+        </div>
+        <h2 className="text-3xl font-bold mb-4">Animal Cadastrado com Sucesso!</h2>
+        <p className="text-xl mb-6">
+          Obrigado por cadastrar um animal para adoção. Ele já está disponível para que outras pessoas possam
+          conhecê-lo.
+        </p>
+        <p className="text-muted-foreground mb-8">
+          Você será redirecionado para a lista de animais disponíveis em alguns segundos...
+        </p>
+        <Button onClick={onComplete} variant="default">
+          Ver animais disponíveis agora
+        </Button>
+      </div>
+    </div>
+  )
+}
+
+function CadastroAnimalForm({ onSuccess }) {
   const [formData, setFormData] = useState({
     nome: "",
     idade: "",
@@ -168,16 +229,16 @@ function CadastroAnimalForm() {
 
     try {
       setIsSubmitting(true)
+      console.log("Enviando cadastro de animal:", dadosParaEnviar)
+      console.log("Foto anexada:", fotoFile ? "Sim" : "Não")
 
       // Usa a nova função que suporta upload de imagens
       await animaisAPI.cadastrarAnimalComImagem(dadosParaEnviar, fotoFile)
 
-      toast({
-        title: "Animal cadastrado com sucesso!",
-        description: "O animal foi adicionado à lista de adoção.",
-      })
+      // Chama a função de sucesso para mostrar a mensagem de agradecimento
+      onSuccess()
 
-      // Limpar formulário
+      // Limpar formulário (embora não seja imediatamente visível devido à mensagem de agradecimento)
       setFormData({
         nome: "",
         idade: "",
@@ -195,8 +256,7 @@ function CadastroAnimalForm() {
         description: error.message || "Ocorreu um erro ao cadastrar o animal.",
         variant: "destructive",
       })
-      console.error(error)
-    } finally {
+      console.error("Erro detalhado:", error)
       setIsSubmitting(false)
     }
   }
