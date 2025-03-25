@@ -4,26 +4,81 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { voluntariosAPI, veterinariosAPI } from "@/lib/api"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/hooks/use-toast"
 import { SiteHeader } from "@/components/site-header"
-import { CheckCircle2 } from "lucide-react"
+import { CheckCircle2, User, Stethoscope } from "lucide-react"
 
 export default function VoluntariosPage() {
   const [showVoluntarioThankYou, setShowVoluntarioThankYou] = useState(false)
   const [showVeterinarioThankYou, setShowVeterinarioThankYou] = useState(false)
   const [activeTab, setActiveTab] = useState("voluntario")
+  const [voluntarios, setVoluntarios] = useState([])
+  const [veterinarios, setVeterinarios] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const { toast } = useToast()
+
+  // Carregar dados de voluntários e veterinários
+  useEffect(() => {
+    async function carregarDados() {
+      try {
+        setIsLoading(true)
+        const [voluntariosData, veterinariosData] = await Promise.all([
+          voluntariosAPI.listarVoluntarios(),
+          veterinariosAPI.listarVeterinarios(),
+        ])
+
+        setVoluntarios(voluntariosData)
+        setVeterinarios(veterinariosData)
+      } catch (error) {
+        console.error("Erro ao carregar dados:", error)
+        toast({
+          title: "Erro ao carregar dados",
+          description: "Não foi possível carregar a lista de voluntários e veterinários.",
+          variant: "destructive",
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    carregarDados()
+  }, [toast])
+
+  // Função para recarregar os dados após um cadastro bem-sucedido
+  const recarregarDados = async () => {
+    try {
+      if (activeTab === "voluntario" || activeTab === "lista-voluntarios") {
+        const voluntariosData = await voluntariosAPI.listarVoluntarios()
+        setVoluntarios(voluntariosData)
+        setActiveTab("lista-voluntarios")
+      } else if (activeTab === "veterinario" || activeTab === "lista-veterinarios") {
+        const veterinariosData = await veterinariosAPI.listarVeterinarios()
+        setVeterinarios(veterinariosData)
+        setActiveTab("lista-veterinarios")
+      }
+    } catch (error) {
+      console.error("Erro ao recarregar dados:", error)
+    }
+  }
 
   // Se qualquer uma das mensagens de agradecimento estiver ativa, mostrar a mensagem correspondente
   if (showVoluntarioThankYou) {
     return (
       <>
         <SiteHeader />
-        <ThankYouMessage type="voluntário" onReset={() => setShowVoluntarioThankYou(false)} />
+        <ThankYouMessage
+          type="voluntário"
+          onReset={() => setShowVoluntarioThankYou(false)}
+          onSuccess={() => {
+            setShowVoluntarioThankYou(false)
+            recarregarDados()
+          }}
+        />
       </>
     )
   }
@@ -32,7 +87,14 @@ export default function VoluntariosPage() {
     return (
       <>
         <SiteHeader />
-        <ThankYouMessage type="veterinário" onReset={() => setShowVeterinarioThankYou(false)} />
+        <ThankYouMessage
+          type="veterinário"
+          onReset={() => setShowVeterinarioThankYou(false)}
+          onSuccess={() => {
+            setShowVeterinarioThankYou(false)
+            recarregarDados()
+          }}
+        />
       </>
     )
   }
@@ -44,13 +106,15 @@ export default function VoluntariosPage() {
         <h1 className="text-3xl font-bold mb-4">Voluntários e Veterinários</h1>
         <p className="text-muted-foreground mb-8">
           Junte-se à nossa rede de pessoas comprometidas com o bem-estar animal. Cadastre-se como voluntário ou
-          veterinário parceiro.
+          veterinário parceiro, ou veja quem já faz parte da nossa equipe.
         </p>
 
-        <Tabs defaultValue="voluntario" value={activeTab} onValueChange={setActiveTab} className="max-w-3xl mx-auto">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="voluntario">Voluntário</TabsTrigger>
-            <TabsTrigger value="veterinario">Veterinário</TabsTrigger>
+        <Tabs defaultValue="voluntario" value={activeTab} onValueChange={setActiveTab} className="max-w-4xl mx-auto">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="voluntario">Cadastrar Voluntário</TabsTrigger>
+            <TabsTrigger value="veterinario">Cadastrar Veterinário</TabsTrigger>
+            <TabsTrigger value="lista-voluntarios">Ver Voluntários</TabsTrigger>
+            <TabsTrigger value="lista-veterinarios">Ver Veterinários</TabsTrigger>
           </TabsList>
 
           <TabsContent value="voluntario">
@@ -81,24 +145,80 @@ export default function VoluntariosPage() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          <TabsContent value="lista-voluntarios">
+            <Card>
+              <CardHeader>
+                <CardTitle>Voluntários Cadastrados</CardTitle>
+                <CardDescription>Conheça as pessoas que dedicam seu tempo para ajudar os animais.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <div className="text-center py-8">Carregando voluntários...</div>
+                ) : voluntarios.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground">Nenhum voluntário cadastrado ainda.</p>
+                    <Button onClick={() => setActiveTab("voluntario")} variant="outline" className="mt-4">
+                      Seja o primeiro a se cadastrar
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {voluntarios.map((voluntario) => (
+                      <VoluntarioCard key={voluntario.id} voluntario={voluntario} />
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="lista-veterinarios">
+            <Card>
+              <CardHeader>
+                <CardTitle>Veterinários Parceiros</CardTitle>
+                <CardDescription>
+                  Conheça os profissionais que cuidam da saúde dos animais em nossa rede.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {isLoading ? (
+                  <div className="text-center py-8">Carregando veterinários...</div>
+                ) : veterinarios.length === 0 ? (
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground">Nenhum veterinário cadastrado ainda.</p>
+                    <Button onClick={() => setActiveTab("veterinario")} variant="outline" className="mt-4">
+                      Seja o primeiro a se cadastrar
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {veterinarios.map((veterinario) => (
+                      <VeterinarioCard key={veterinario.id} veterinario={veterinario} />
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
     </>
   )
 }
 
-function ThankYouMessage({ type, onReset }) {
+function ThankYouMessage({ type, onReset, onSuccess }) {
   const router = useRouter()
 
   useEffect(() => {
     // Redirecionar para a página inicial após 5 segundos
     const redirectTimer = setTimeout(() => {
-      router.push("/")
+      onSuccess()
     }, 5000)
 
     // Limpar o temporizador se o componente for desmontado
     return () => clearTimeout(redirectTimer)
-  }, [router])
+  }, [router, onSuccess])
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -112,11 +232,11 @@ function ThankYouMessage({ type, onReset }) {
           processo.
         </p>
         <p className="text-muted-foreground mb-8">
-          Você será redirecionado para a página inicial em alguns segundos...
+          Você será redirecionado para a lista de cadastros em alguns segundos...
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button onClick={() => router.push("/")} variant="default">
-            Voltar para a página inicial agora
+          <Button onClick={onSuccess} variant="default">
+            Ver lista de cadastros agora
           </Button>
           <Button onClick={onReset} variant="outline">
             Fazer outro cadastro
@@ -124,6 +244,72 @@ function ThankYouMessage({ type, onReset }) {
         </div>
       </div>
     </div>
+  )
+}
+
+function VoluntarioCard({ voluntario }) {
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <div className="flex items-center gap-2">
+          <User className="h-5 w-5 text-primary" />
+          <CardTitle className="text-lg">{voluntario.nome}</CardTitle>
+        </div>
+      </CardHeader>
+      <CardContent className="pb-2">
+        <div className="space-y-2 text-sm">
+          <div>
+            <span className="font-medium">Telefone:</span> {voluntario.telefone}
+          </div>
+          <div>
+            <span className="font-medium">Endereço:</span> {voluntario.endereco}
+          </div>
+          <div>
+            <span className="font-medium">Disponibilidade:</span>{" "}
+            {voluntario.disponibilidade === "dias_uteis" && "Dias úteis"}
+            {voluntario.disponibilidade === "finais_semana" && "Finais de semana"}
+            {voluntario.disponibilidade === "ambos" && "Dias úteis e finais de semana"}
+            {voluntario.disponibilidade === "sob_demanda" && "Sob demanda"}
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <p className="text-xs text-muted-foreground">
+          <span className="font-medium">Experiência:</span> {voluntario.experiencia}
+        </p>
+      </CardFooter>
+    </Card>
+  )
+}
+
+function VeterinarioCard({ veterinario }) {
+  return (
+    <Card>
+      <CardHeader className="pb-2">
+        <div className="flex items-center gap-2">
+          <Stethoscope className="h-5 w-5 text-primary" />
+          <CardTitle className="text-lg">{veterinario.nome}</CardTitle>
+        </div>
+        <CardDescription>{veterinario.especialidade}</CardDescription>
+      </CardHeader>
+      <CardContent className="pb-2">
+        <div className="space-y-2 text-sm">
+          <div>
+            <span className="font-medium">Telefone:</span> {veterinario.telefone}
+          </div>
+          <div>
+            <span className="font-medium">Localização:</span> {veterinario.localizacao}
+          </div>
+          <div>
+            <span className="font-medium">Disponibilidade:</span>{" "}
+            {veterinario.disponibilidade === "horario_comercial" && "Horário comercial"}
+            {veterinario.disponibilidade === "plantao" && "Plantão"}
+            {veterinario.disponibilidade === "emergencias" && "Apenas emergências"}
+            {veterinario.disponibilidade === "agendamento" && "Mediante agendamento"}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   )
 }
 
