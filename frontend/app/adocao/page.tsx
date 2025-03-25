@@ -346,7 +346,7 @@ function CadastroAnimalForm({ onSuccess }) {
         </div>
 
         <div className="grid gap-2 md:col-span-2">
-          <Label htmlFor="requisitos_adoção">Requisitos para Adoção</Label>
+          <Label htmlFor="requisitos_adoção">Requisitos para Adoção / Necessidade de Ajuda</Label>
           <textarea
             id="requisitos_adoção"
             name="requisitos_adoção"

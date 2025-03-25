@@ -123,12 +123,12 @@ export default function DetalhesAnimalPage() {
               </div>
 
               <div>
-                <h3 className="font-semibold text-lg mb-2">Requisitos para Adoção</h3>
+                <h3 className="font-semibold text-lg mb-2">Requisitos para Adoção / Necessidade de Ajuda</h3>
                 <p>{animal.requisitos_adoção}</p>
               </div>
 
               <Button className="w-full mt-6" onClick={() => setShowAdocaoDialog(true)}>
-                Quero Adotar
+                Quero Adotar / Quero Ajudar
               </Button>
             </CardContent>
           </Card>
@@ -137,12 +137,12 @@ export default function DetalhesAnimalPage() {
         <Dialog open={showAdocaoDialog} onOpenChange={setShowAdocaoDialog}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Interesse em adoção</DialogTitle>
+              <DialogTitle>Interesse em adoção ou ajuda</DialogTitle>
               <DialogDescription>Obrigado por se interessar em adotar {animal.nome}!</DialogDescription>
             </DialogHeader>
             <div className="py-4">
               <p className="mb-4">
-                Para dar continuidade ao processo de adoção, entre em contato conosco através dos seguintes canais:
+                Para dar continuidade ao processo de adoção ou auxilio para o animal, entre em contato conosco através dos seguintes canais:
               </p>
               <div className="space-y-2 text-sm">
                 <p>
