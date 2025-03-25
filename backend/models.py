@@ -29,6 +29,7 @@ class Voluntario(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String)
+    telefone = Column(String)
     endereco = Column(String)
     disponibilidade = Column(String)
     experiencia = Column(Text)
@@ -38,6 +39,7 @@ class Veterinario(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     nome = Column(String)
+    telefone = Column(String)
     especialidade = Column(String)
     disponibilidade = Column(String)
     localizacao = Column(String)

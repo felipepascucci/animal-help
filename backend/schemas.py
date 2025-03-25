@@ -39,6 +39,7 @@ class Denuncia(DenunciaBase):
 
 class VoluntarioBase(BaseModel):
     nome: str
+    telefone: str
     endereco: str
     disponibilidade: str
     experiencia: str
@@ -54,6 +55,7 @@ class Voluntario(VoluntarioBase):
 
 class VeterinarioBase(BaseModel):
     nome: str
+    telefone: str
     especialidade: str
     disponibilidade: str
     localizacao: str

@@ -131,6 +131,7 @@ function VoluntarioForm({ onSuccess }) {
   const [formData, setFormData] = useState({
     nome: "",
     endereco: "",
+    telefone: "",
     disponibilidade: "",
     experiencia: "",
   })
@@ -151,6 +152,7 @@ function VoluntarioForm({ onSuccess }) {
 
     try {
       setIsSubmitting(true)
+      console.log("Enviando cadastro de voluntário:", formData)
       await voluntariosAPI.cadastrarVoluntario(formData)
 
       // Chama a função de sucesso para mostrar a mensagem de agradecimento
@@ -161,7 +163,7 @@ function VoluntarioForm({ onSuccess }) {
         description: error.message || "Ocorreu um erro ao enviar seu cadastro. Tente novamente mais tarde.",
         variant: "destructive",
       })
-      console.error(error)
+      console.error("Erro detalhado:", error)
       setIsSubmitting(false)
     }
   }
@@ -172,6 +174,18 @@ function VoluntarioForm({ onSuccess }) {
         <div className="grid gap-2">
           <Label htmlFor="nome">Nome Completo</Label>
           <Input id="nome" name="nome" value={formData.nome} onChange={handleChange} required />
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="telefone">Telefone</Label>
+          <Input
+            id="telefone"
+            name="telefone"
+            value={formData.telefone}
+            onChange={handleChange}
+            placeholder="(00) 00000-0000"
+            required
+          />
         </div>
 
         <div className="grid gap-2">
@@ -223,6 +237,7 @@ function VeterinarioForm({ onSuccess }) {
   const [formData, setFormData] = useState({
     nome: "",
     especialidade: "",
+    telefone: "",
     disponibilidade: "",
     localizacao: "",
   })
@@ -243,6 +258,7 @@ function VeterinarioForm({ onSuccess }) {
 
     try {
       setIsSubmitting(true)
+      console.log("Enviando cadastro de veterinário:", formData)
       await veterinariosAPI.cadastrarVeterinario(formData)
 
       // Chama a função de sucesso para mostrar a mensagem de agradecimento
@@ -253,7 +269,7 @@ function VeterinarioForm({ onSuccess }) {
         description: error.message || "Ocorreu um erro ao enviar seu cadastro. Tente novamente mais tarde.",
         variant: "destructive",
       })
-      console.error(error)
+      console.error("Erro detalhado:", error)
       setIsSubmitting(false)
     }
   }
@@ -264,6 +280,18 @@ function VeterinarioForm({ onSuccess }) {
         <div className="grid gap-2">
           <Label htmlFor="nome">Nome Completo</Label>
           <Input id="nome" name="nome" value={formData.nome} onChange={handleChange} required />
+        </div>
+
+        <div className="grid gap-2">
+          <Label htmlFor="telefone">Telefone</Label>
+          <Input
+            id="telefone"
+            name="telefone"
+            value={formData.telefone}
+            onChange={handleChange}
+            placeholder="(00) 00000-0000"
+            required
+          />
         </div>
 
         <div className="grid gap-2">
