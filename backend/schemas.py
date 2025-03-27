@@ -38,6 +38,7 @@ class Denuncia(DenunciaBase):
         orm_mode = True
 
 class VoluntarioBase(BaseModel):
+    fotos: Optional[str]
     nome: str
     telefone: str
     endereco: str
@@ -54,6 +55,7 @@ class Voluntario(VoluntarioBase):
         orm_mode = True
 
 class VeterinarioBase(BaseModel):
+    fotos: Optional[str]
     nome: str
     telefone: str
     especialidade: str

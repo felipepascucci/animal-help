@@ -28,6 +28,7 @@ class Voluntario(Base):
     __tablename__ = "voluntarios"
 
     id = Column(Integer, primary_key=True, index=True)
+    fotos = Column(String, nullable=True)
     nome = Column(String)
     telefone = Column(String)
     endereco = Column(String)
@@ -38,6 +39,7 @@ class Veterinario(Base):
     __tablename__ = "veterinarios"
 
     id = Column(Integer, primary_key=True, index=True)
+    fotos = Column(String, nullable=True)
     nome = Column(String)
     telefone = Column(String)
     especialidade = Column(String)

@@ -327,6 +327,14 @@ export const voluntariosAPI = {
       method: "PUT",
       body: JSON.stringify(dados),
     }),
+
+  // Cadastrar um novo voluntário com imagem
+  cadastrarVoluntarioComImagem: (dados: any, fotoFile: File | null) =>
+    submitFormWithFiles("/voluntarios", dados, { fotos: fotoFile }),
+
+  // Atualizar informações de um voluntário com imagem
+  atualizarVoluntarioComImagem: (id: number, dados: any, fotoFile: File | null) =>
+    submitFormWithFiles(`/voluntarios/${id}`, dados, { fotos: fotoFile }),
 }
 
 // API de Veterinários
@@ -350,6 +358,14 @@ export const veterinariosAPI = {
       method: "PUT",
       body: JSON.stringify(dados),
     }),
+  
+  // Cadastrar um novo veterinário com imagem
+  cadastrarVeterinarioComImagem: (dados: any, fotoFile: File | null) =>
+    submitFormWithFiles("/veterinarios", dados, { fotos: fotoFile }),
+
+  // Atualizar informações de um veterinário com imagem
+  atualizarVeterinarioComImagem: (id: number, dados: any, fotoFile: File | null) =>
+    submitFormWithFiles(`/veterinarios/${id}`, dados, { fotos: fotoFile }),
 }
 
 // API de Dicas
