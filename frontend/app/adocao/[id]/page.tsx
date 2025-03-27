@@ -82,13 +82,40 @@ export default function DetalhesAnimalPage() {
         </Button>
 
         <div className="grid md:grid-cols-2 gap-8">
-          <div className="relative h-[400px] w-full rounded-lg overflow-hidden">
-            <Image
-              src={animal.fotos || "/placeholder.svg?height=400&width=600"}
-              alt={animal.nome}
-              fill
-              className="object-cover"
-            />
+          <div className="space-y-4">
+            <div className="relative h-[400px] w-full rounded-lg overflow-hidden">
+              <Image
+                src={animal.fotos || "/placeholder.svg?height=400&width=600"}
+                alt={animal.nome}
+                fill
+                className="object-cover"
+              />
+            </div>
+
+            {/* Fotos adicionais em uma linha */}
+            <div className="grid grid-cols-2 gap-4">
+              {animal.fotos2 && (
+                <div className="relative h-[180px] w-full rounded-lg overflow-hidden">
+                  <Image
+                    src={animal.fotos2 || "/placeholder.svg"}
+                    alt={`${animal.nome} - foto adicional 1`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              )}
+
+              {animal.fotos3 && (
+                <div className="relative h-[180px] w-full rounded-lg overflow-hidden">
+                  <Image
+                    src={animal.fotos3 || "/placeholder.svg"}
+                    alt={`${animal.nome} - foto adicional 2`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
           <Card>

@@ -271,8 +271,8 @@ export const animaisAPI = {
     }),
 
   // Cadastrar um novo animal para adoção com imagem
-  cadastrarAnimalComImagem: (dados: any, fotoFile: File | null) =>
-    submitFormWithFiles("/animais", dados, { fotos: fotoFile }),
+  cadastrarAnimalComImagem: (dados: any, fotoFile: File | null, fotoFile2: File | null, fotoFile3: File | null,) =>
+    submitFormWithFiles("/animais", dados, { fotos: fotoFile, fotos2: fotoFile2, fotos3: fotoFile3 }),
 
   // Atualizar informações de um animal com imagem
   atualizarAnimalComImagem: (id: number, dados: any, fotoFile: File | null) =>

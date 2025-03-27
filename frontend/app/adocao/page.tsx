@@ -202,6 +202,8 @@ function CadastroAnimalForm({ onSuccess }) {
     requisitos_adoção: "",
   })
   const [fotoFile, setFotoFile] = useState<File | null>(null)
+  const [fotoFile2, setFotoFile2] = useState<File | null>(null)
+  const [fotoFile3, setFotoFile3] = useState<File | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { toast } = useToast()
 
@@ -218,6 +220,14 @@ function CadastroAnimalForm({ onSuccess }) {
     setFotoFile(file)
   }
 
+  const handleImageChange2 = (file: File | null) => {
+    setFotoFile2(file)
+  }
+
+  const handleImageChange3 = (file: File | null) => {
+    setFotoFile3(file)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -230,10 +240,10 @@ function CadastroAnimalForm({ onSuccess }) {
     try {
       setIsSubmitting(true)
       console.log("Enviando cadastro de animal:", dadosParaEnviar)
-      console.log("Foto anexada:", fotoFile ? "Sim" : "Não")
+      console.log("Fotos anexadas:", fotoFile ? "Sim" : "Não", fotoFile2 ? "Sim" : "Não", fotoFile3 ? "Sim" : "Não")
 
-      // Usa a nova função que suporta upload de imagens
-      await animaisAPI.cadastrarAnimalComImagem(dadosParaEnviar, fotoFile)
+      // Usa a nova função que suporta upload de múltiplas imagens
+      await animaisAPI.cadastrarAnimalComImagem(dadosParaEnviar, fotoFile, fotoFile2, fotoFile3)
 
       // Chama a função de sucesso para mostrar a mensagem de agradecimento
       onSuccess()
@@ -250,6 +260,8 @@ function CadastroAnimalForm({ onSuccess }) {
         requisitos_adoção: "",
       })
       setFotoFile(null)
+      setFotoFile2(null)
+      setFotoFile3(null)
     } catch (error) {
       toast({
         title: "Erro ao cadastrar animal",
@@ -302,8 +314,24 @@ function CadastroAnimalForm({ onSuccess }) {
         </div>
 
         <div className="grid gap-2 md:col-span-2">
-          <Label>Foto do Animal</Label>
-          <ImageUpload onImageChange={handleImageChange} />
+          <Label>Fotos do Animal (até 3)</Label>
+          <div className="flex flex-wrap justify-center gap-6">
+            <div className="flex flex-col items-center">
+              <p className="text-sm text-muted-foreground mb-2">Foto Principal</p>
+              <ImageUpload onImageChange={handleImageChange} />
+            </div>
+            <div className="flex flex-col items-center">
+              <p className="text-sm text-muted-foreground mb-2">Foto Adicional 1</p>
+              <ImageUpload onImageChange={handleImageChange2} />
+            </div>
+            <div className="flex flex-col items-center">
+              <p className="text-sm text-muted-foreground mb-2">Foto Adicional 2</p>
+              <ImageUpload onImageChange={handleImageChange3} />
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground text-center mt-2">
+            Adicione até 3 fotos do animal para aumentar as chances de adoção
+          </p>
         </div>
 
         <div className="grid gap-2 md:col-span-2">

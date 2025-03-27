@@ -12,6 +12,8 @@ class Animal(Base):
     caracteristicas_fisicas = Column(Text)
     historico_saude = Column(Text)
     fotos = Column(String, nullable=True)
+    fotos2 = Column(String, nullable=True)
+    fotos3 = Column(String, nullable=True)
     comportamento = Column(Text)
     requisitos_adoção = Column(Text)
 

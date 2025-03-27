@@ -10,6 +10,8 @@ class AnimalBase(BaseModel):
     caracteristicas_fisicas: str
     historico_saude: str
     fotos: Optional[str]
+    fotos2: Optional[str]
+    fotos3: Optional[str]
     comportamento: str
     requisitos_adoção: str
 
