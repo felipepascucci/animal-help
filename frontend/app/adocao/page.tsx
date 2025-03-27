@@ -330,7 +330,7 @@ function CadastroAnimalForm({ onSuccess }) {
             </div>
           </div>
           <p className="text-xs text-muted-foreground text-center mt-2">
-            Adicione até 3 fotos do animal para aumentar as chances de adoção
+            Adicione as 3 fotos do animal para aumentar as chances de adoção
           </p>
         </div>
 
