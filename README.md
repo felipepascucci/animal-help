@@ -15,26 +15,31 @@ Este projeto tem como objetivo facilitar a adoção e o resgate de animais, cone
 
 - Python 3.7 ou superior.
 - Pip para gerenciar pacotes.
+- Visual Studio Code, ou qualquer outro editor de código-fonte com acesso ao terminal de sua preferência 😊
 
 ### 📌 Instalação e Execução
 
-1. **Clone o repositório:**
+1. **Clone o repositório a partir do terminal no Visual Studio:**
+
+   Utilize o atalho Ctrl + ` para abrir o terminal
 
    ```sh
    git clone https://github.com/felipepascucci/animal-help.git
    ```
 
-2. **Instale as dependências do backend:**
+2. **Instale as dependências do backend através do terminal utilizando o gerenciador de pacotes do pyhton, PIP:**
 
    ```sh
-   pip install fastapi uvicorn sqlalchemy pydantic
+   pip install -r requirements.txt
    ```
 
 3. **Execute a API (backend):**
 
    ```sh
    python -m backend.main
+   ```
 
+   ```sh
    uvicorn backend.main:app --reload
    ```
 
@@ -45,14 +50,22 @@ Este projeto tem como objetivo facilitar a adoção e o resgate de animais, cone
    - API: [http\://localhost:8000](http\://localhost:8000)
    - Documentação interativa (Swagger): [http\://localhost:8000/docs](http\://localhost:8000/docs)
 
-4. **Instale as dependências do frontend e inicie a aplicação (frontend):**
+4. **Instale as dependências do frontend através do terminal utilizando o npm:**
 
    ```sh
    cd frontend
+   ```
+
+   ```sh
    npm install --force
-   
+   ```
+
+5. **Inicie a aplicação (frontend):**
+   ```sh
    npm run dev
    ```
+
+   &#x20;  &#x20;
 
    O frontend estará disponível em:
 
